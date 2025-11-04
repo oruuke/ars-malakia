@@ -31,7 +31,7 @@ pub fn view(_model: &mut Model, frame: &mut Frame) {
         ("namespace", col_pink2),
         ("type", col_rose1),
     ];
-    let content = std::fs::read_to_string("./src/main.rs").unwrap();
+    let content = std::fs::read_to_string("./src/update.rs").unwrap();
     let editor = Editor::new("rust", &content, theme);
 
     frame.render_widget(&editor, frame.area());
