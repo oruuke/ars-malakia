@@ -1,5 +1,5 @@
 # ars malakia
-[![cutified wit advanced rat tech!](https://ratatui.rs/built-with-ratatui/badge.svg)](https://ratatui.rs/)
+[![](https://img.shields.io/badge/Ratatui-000?logo=ratatui&logoColor=b55088&style=for-the-badge)](https://ratatui.rs/)
 
 ## todo
 - [x] figure out ratatui
