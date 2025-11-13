@@ -3,7 +3,7 @@
 
 -- oruuke, author, demenza extraordinaire
 
-[![](https://img.shields.io/badge/Ratatui-000?logo=ratatui&logoColor=b55088&style=for-the-badge)](https://ratatui.rs/) ^*built wit advanced rat tech!*^
+[![](https://img.shields.io/badge/Ratatui-000?logo=ratatui&logoColor=b55088&style=for-the-badge)](https://ratatui.rs/) *^built wit advanced rat tech!^*
 
 ## todo
 - [x] figure out ratatui
