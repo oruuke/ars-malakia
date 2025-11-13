@@ -1,4 +1,6 @@
 # ars malakia
+"compendium of rust teachings, archiving the author's journey for later reference when all is inevitably forgor"
+-- oruuke, author, demenza extraordinaire
 [![](https://img.shields.io/badge/Ratatui-000?logo=ratatui&logoColor=b55088&style=for-the-badge)](https://ratatui.rs/)
 
 ## todo
@@ -15,3 +17,4 @@
 - [ ] add cover and prelude and other stuffy book stuff
 - [ ] add code sandbox option for code examples
 - [ ] add searching
+- [ ] actually start writing shit
