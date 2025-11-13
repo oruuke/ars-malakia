@@ -1,9 +1,8 @@
 use better_panic;
 use color_eyre;
 
-mod editor_wrapper;
 mod model;
-mod theme;
+mod pages;
 mod update;
 mod view;
 use crate::{

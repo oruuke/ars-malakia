@@ -15,7 +15,7 @@ pub enum Message {
 }
 
 pub fn handle_event(_: &Model) -> color_eyre::Result<Option<Message>> {
-    if event::poll(Duration::from_millis(250))? {
+    if event::poll(Duration::from_millis(100))? {
         if let Event::Key(key) = event::read()? {
             if key.kind == event::KeyEventKind::Press {
                 return Ok(handle_key(key));
@@ -27,8 +27,10 @@ pub fn handle_event(_: &Model) -> color_eyre::Result<Option<Message>> {
 
 fn handle_key(key: event::KeyEvent) -> Option<Message> {
     match key.code {
-        KeyCode::Char('n') => Some(Message::Decrement),
-        KeyCode::Char('e') => Some(Message::Increment),
+        KeyCode::Char('h') => Some(Message::Reset),
+        KeyCode::Char('j') => Some(Message::Increment),
+        KeyCode::Char('k') => Some(Message::Decrement),
+        KeyCode::Char('l') => Some(Message::Reset),
         KeyCode::Char('q') => Some(Message::Quit),
         _ => None,
     }
@@ -38,18 +40,14 @@ pub fn update(model: &mut Model, msg: Message) -> Option<Message> {
     // match all possible messages and return new model reflecting changes
     match msg {
         Message::Increment => {
-            model.counter += 1;
-            if model.counter > 50 {
-                return Some(Message::Reset);
-            }
+            model.y_pos += 1;
         }
         Message::Decrement => {
-            model.counter -= 1;
-            if model.counter < -50 {
-                return Some(Message::Reset);
+            if model.y_pos > 0 {
+                model.y_pos -= 1;
             }
         }
-        Message::Reset => model.counter = 0,
+        Message::Reset => model.y_pos = 0,
         Message::Quit => {
             model.running_state = RunningState::Done;
         }
