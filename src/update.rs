@@ -15,14 +15,33 @@ pub enum Message {
 }
 
 pub fn handle_event(_: &Model) -> color_eyre::Result<Option<Message>> {
-    if event::poll(Duration::from_millis(100))? {
+    // initial wait for event and full bypass if none
+    if !event::poll(Duration::from_millis(69))? {
+        return Ok(None);
+    }
+
+    // store only one event message
+    let mut last_message = None;
+
+    // capture expected event
+    if let Event::Key(key) = event::read()? {
+        if key.kind == event::KeyEventKind::Press {
+            last_message = handle_key(key);
+        }
+    }
+
+    // drain que of all additional events
+    while event::poll(Duration::ZERO)? {
         if let Event::Key(key) = event::read()? {
             if key.kind == event::KeyEventKind::Press {
-                return Ok(handle_key(key));
+                if let Some(msg) = handle_key(key) {
+                    // overwrite wit most recent message
+                    last_message = Some(msg);
+                }
             }
         }
     }
-    Ok(None)
+    Ok(last_message)
 }
 
 fn handle_key(key: event::KeyEvent) -> Option<Message> {
@@ -40,10 +59,12 @@ pub fn update(model: &mut Model, msg: Message) -> Option<Message> {
     // match all possible messages and return new model reflecting changes
     match msg {
         Message::Increment => {
-            model.y_pos += 1;
+            if model.is_scrollable {
+                model.y_pos += 1;
+            }
         }
         Message::Decrement => {
-            if model.y_pos > 0 {
+            if model.y_pos > 0 && model.is_scrollable {
                 model.y_pos -= 1;
             }
         }
