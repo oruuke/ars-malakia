@@ -59,14 +59,10 @@ pub fn update(model: &mut Model, msg: Message) -> Option<Message> {
     // match all possible messages and return new model reflecting changes
     match msg {
         Message::Increment => {
-            if model.is_scrollable {
-                model.y_pos += 1;
-            }
+            model.y_pos = (model.y_pos + 1).min(model.max_scroll);
         }
         Message::Decrement => {
-            if model.y_pos > 0 && model.is_scrollable {
-                model.y_pos -= 1;
-            }
+            model.y_pos = model.y_pos.saturating_sub(1);
         }
         Message::Reset => model.y_pos = 0,
         Message::Quit => {

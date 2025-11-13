@@ -13,18 +13,18 @@ pub fn view(model: &mut Model, frame: &mut Frame) {
     let page = create_page(area.width.saturating_sub(7), model.y_pos);
     let block = Block::default()
         .borders(Borders::ALL)
-        .padding(Padding::new(2, 2, 0, 2));
+        .padding(Padding::new(2, 2, 1, 1));
     frame.render_widget(page.content.block(block), area);
 
     let scrollbar = Scrollbar::new(ScrollbarOrientation::VerticalRight)
         .begin_symbol(Some("↑"))
         .end_symbol(Some("↓"));
-    let max_scroll = (page.height as usize).saturating_sub(area.height as usize);
-    if max_scroll == 0 {
-        model.is_scrollable = false;
-    } else {
-        model.is_scrollable = true;
-        let mut scrollbar_state = ScrollbarState::new(max_scroll).position(model.y_pos);
+
+    let visible_height = area.height.saturating_sub(3);
+    model.max_scroll = page.height.saturating_sub(visible_height);
+    if model.max_scroll > 0 {
+        let mut scrollbar_state =
+            ScrollbarState::new(model.max_scroll.into()).position(model.y_pos.into());
         frame.render_stateful_widget(
             scrollbar,
             area.inner(Margin {

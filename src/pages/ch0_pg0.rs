@@ -2,7 +2,7 @@ use crate::pages::editor_wrapper::EditorWidget;
 use crate::pages::theme::tree_sitter;
 use ratatui::{
     buffer::Buffer,
-    layout::{Constraint, Flex, Layout, Rect},
+    layout::{Constraint, Flex, Layout, Margin, Rect},
     style::Style,
     text::{Line, Span},
     widgets::{Block, Borders, Paragraph, Widget},
@@ -14,7 +14,7 @@ pub struct Page<'a> {
 }
 
 // page for the reading!
-pub fn create_page(width: u16, vertical_scroll: usize) -> Page<'static> {
+pub fn create_page(width: u16, vertical_scroll: u16) -> Page<'static> {
     // introduce hai world
     let hai_world = "dis is a simple hai world program";
     let para_hai_world = Paragraph::new(hai_world);
@@ -24,10 +24,10 @@ pub fn create_page(width: u16, vertical_scroll: usize) -> Page<'static> {
     let theme = tree_sitter();
     let code_content = std::fs::read_to_string("./examples/hai_world.rs").unwrap();
     let code_hai_world = EditorWidget::new("rust", &code_content, theme);
-    let code_height = code_content.lines().count() as u16 + 3;
+    let code_height = code_content.lines().count() as u16 + 5;
 
     // defining virtual buffer for scrolling
-    let buffer_height = para_height + code_height + 50;
+    let buffer_height = para_height + code_height;
     let mut buf = Buffer::empty(Rect {
         x: 0,
         y: 0,
@@ -57,10 +57,11 @@ pub fn create_page(width: u16, vertical_scroll: usize) -> Page<'static> {
     // pad out code wit borders
     let block = Block::default()
         .borders(Borders::ALL)
-        .title(Line::from(" code ").centered());
-    let inner = block.inner(centered);
+        .title(Line::from(" main.rs ").centered());
+    let padding = centered.inner(Margin::new(0, 1));
+    let inner = block.inner(padding);
     // render code
-    block.render(centered, &mut buf);
+    block.render(padding, &mut buf);
     code_hai_world.render(inner, &mut buf);
 
     // convert buffer to lines
