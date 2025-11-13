@@ -1,6 +1,8 @@
 # ars malakia
-"compendium of rust teachings, archiving the author's journey for later reference when all is inevitably forgor"
+>"compendium of rust teachings, archiving the author's journey for later reference when all is inevitably forgor"
+
 -- oruuke, author, demenza extraordinaire
+
 [![](https://img.shields.io/badge/Ratatui-000?logo=ratatui&logoColor=b55088&style=for-the-badge)](https://ratatui.rs/)
 
 ## todo
