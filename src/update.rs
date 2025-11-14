@@ -1,16 +1,16 @@
-use std::time::Duration;
-
+use crate::model::{Model, RunningState};
+use crate::pages::ALL_PAGES;
 use color_eyre;
 use ratatui::crossterm::event::{self, Event, KeyCode};
-
-use crate::model::{Model, RunningState};
+use std::time::Duration;
 
 // update handling with a message for each action/event (logic)
 #[derive(PartialEq)]
 pub enum Message {
-    Increment,
-    Decrement,
-    Reset,
+    PagePrev,
+    ScrollDown,
+    ScrollUp,
+    PageNext,
     Quit,
 }
 
@@ -46,10 +46,10 @@ pub fn handle_event(_: &Model) -> color_eyre::Result<Option<Message>> {
 
 fn handle_key(key: event::KeyEvent) -> Option<Message> {
     match key.code {
-        KeyCode::Char('h') => Some(Message::Reset),
-        KeyCode::Char('j') => Some(Message::Increment),
-        KeyCode::Char('k') => Some(Message::Decrement),
-        KeyCode::Char('l') => Some(Message::Reset),
+        KeyCode::Char('h') => Some(Message::PagePrev),
+        KeyCode::Char('j') => Some(Message::ScrollDown),
+        KeyCode::Char('k') => Some(Message::ScrollUp),
+        KeyCode::Char('l') => Some(Message::PageNext),
         KeyCode::Char('q') => Some(Message::Quit),
         _ => None,
     }
@@ -58,13 +58,23 @@ fn handle_key(key: event::KeyEvent) -> Option<Message> {
 pub fn update(model: &mut Model, msg: Message) -> Option<Message> {
     // match all possible messages and return new model reflecting changes
     match msg {
-        Message::Increment => {
+        Message::PagePrev => {
+            model.page = model.page.saturating_sub(1);
+            model.y_pos = 0;
+        }
+        Message::ScrollDown => {
             model.y_pos = (model.y_pos + 1).min(model.max_scroll);
         }
-        Message::Decrement => {
+        Message::ScrollUp => {
             model.y_pos = model.y_pos.saturating_sub(1);
         }
-        Message::Reset => model.y_pos = 0,
+        Message::PageNext => {
+            let page_count = ALL_PAGES.len() as u16;
+            if model.page < page_count - 1 {
+                model.page = model.page.saturating_add(1);
+                model.y_pos = 0;
+            }
+        }
         Message::Quit => {
             model.running_state = RunningState::Done;
         }

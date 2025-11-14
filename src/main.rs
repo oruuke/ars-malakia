@@ -1,8 +1,12 @@
+// basic libs
 use better_panic;
 use color_eyre;
-
-mod model;
+// utils
+mod editor_wrapper;
 mod pages;
+mod theme;
+// elm structure
+mod model;
 mod update;
 mod view;
 use crate::{

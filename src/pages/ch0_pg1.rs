@@ -12,7 +12,7 @@ use ratatui::{
 // page for the reading!
 pub fn create_page(width: &u16, vertical_scroll: u16) -> Page<'static> {
     // introduce hai world
-    let hai_world = "dis is a simple hai world program";
+    let hai_world = "dis is a another hai world program";
     let para_hai_world = Paragraph::new(hai_world);
     let para_height = hai_world.lines().count() as u16;
 

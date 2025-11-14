@@ -1,16 +1,24 @@
 use crate::model::Model;
-use crate::pages::ch0_pg0::create_page;
+use crate::pages::ALL_PAGES;
 use ratatui::{
     Frame,
     layout::Margin,
-    widgets::{Block, Borders, Padding, Scrollbar, ScrollbarOrientation, ScrollbarState},
+    widgets::{
+        Block, Borders, Padding, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState,
+    },
 };
+
+pub struct Page<'a> {
+    pub content: Paragraph<'a>,
+    pub height: u16,
+}
 
 // rendering view to always produce same ui representation for given model
 pub fn view(model: &mut Model, frame: &mut Frame) {
     // area for pages, minus borders (2), padding (4), scrollbar (1)
     let area = frame.area();
-    let page = create_page(area.width.saturating_sub(7), model.y_pos);
+    let page_width = area.width.saturating_sub(7);
+    let page = ALL_PAGES[model.page as usize](&page_width, model.y_pos);
     let block = Block::default()
         .borders(Borders::ALL)
         .padding(Padding::new(2, 2, 1, 1));
