@@ -14,9 +14,9 @@
 - [x] add layouting
 - [x] fix weirdass laggy scrolling
 - [x] add page turning
+- [x] add cover and prelude and other stuffy book stuff
 - [ ] add big letter openings wit text wrapping
 - [ ] add pretty garnish styling
-- [ ] add cover and prelude and other stuffy book stuff
 - [ ] add code sandbox option for code examples
 - [ ] add searching
 - [ ] actually start writing shit
