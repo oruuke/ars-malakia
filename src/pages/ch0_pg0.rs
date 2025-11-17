@@ -1,44 +1,37 @@
+use crate::ascii::{AsciiArt, TITLE};
+use crate::theme::center;
 use crate::view::Page;
 use ratatui::{
     buffer::Buffer,
-    layout::{Constraint, Flex, Layout, Margin, Rect},
+    layout::{Constraint, Flex, Layout, Rect},
     style::Style,
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Widget},
+    widgets::{Block, Borders, Padding, Paragraph, Widget},
 };
 
 // page for the reading!
-pub fn create_page(width: &u16, vertical_scroll: u16) -> Page<'static> {
-    // introduce hai world
-    let title_str = "ars malakia";
-    let title_para = Paragraph::new(title_str);
-    let title_height = title_str.lines().count() as u16 + 5;
+pub fn create_page(width: &u16, height: &u16, vertical_scroll: u16) -> Page<'static> {
+    // create ascii for cover art
+    let ascii_cover = AsciiArt::new();
+    let ascii_width_usize = TITLE.lines().map(|line| line.len()).max().unwrap_or(0);
+    let ascii_width = (ascii_width_usize as u16).min(u16::MAX);
+    let ascii_height = TITLE.lines().count() as u16;
 
     // defining virtual buffer for scrolling
-    let buffer_height = title_height;
-    let mut buf = Buffer::empty(Rect {
+    let area = Rect {
         x: 0,
         y: 0,
         width: width.to_owned(),
-        height: buffer_height as u16,
-    });
-    // track scroll position
-    let current_y = 0;
+        height: height.to_owned(),
+    };
+    let mut buf = Buffer::empty(area);
 
-    // center title
-    let title_section = Rect::new(0, current_y, width.to_owned(), title_height);
-    let [title_section] = Layout::horizontal([Constraint::Length(title_str.len() as u16)])
-        .flex(Flex::Center)
-        .areas(title_section);
-    let block = Block::default();
-    let margin = title_section.inner(Margin::new(0, 0));
-    let inner = block.inner(margin);
-    // render title
-    block.render(margin, &mut buf);
-    title_para.render(inner, &mut buf);
+    // render ascii art
+    let inner = center(&area, ascii_width, ascii_height);
+    ascii_cover.render(inner, &mut buf);
 
     // convert buffer to lines
-    let lines: Vec<Line> = (0..buffer_height)
+    let lines: Vec<Line> = (0..height.to_owned())
         .map(|y| {
             // empty allocation
             let mut spans = Vec::new();
@@ -70,6 +63,6 @@ pub fn create_page(width: &u16, vertical_scroll: u16) -> Page<'static> {
 
     Page {
         content,
-        height: buffer_height,
+        height: height.to_owned(),
     }
 }

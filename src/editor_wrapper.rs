@@ -2,6 +2,7 @@
 // basically just needa force ratatui-code-editor to switch from 'Widget for &T' to 'Widget for T'
 // (incredible lib name btw)
 
+use crate::theme::{Theme, build_theme};
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
@@ -11,9 +12,6 @@ use ratatui::{
 use ratatui_code_editor::code::{Code, RopeGraphemes, grapheme_width_and_bytes_len};
 use std::cell::RefCell;
 use std::collections::HashMap;
-
-// for mapping theme to ratatui styles
-type Theme = HashMap<String, Style>;
 
 // represent styled span: (start, end, style)
 type Highlight = (usize, usize, Style);
@@ -36,8 +34,7 @@ impl EditorWidget {
             .or_else(|_| Code::new(content, "text"))
             .unwrap();
 
-        // setup theme wit ratatui styles
-        let theme = Self::build_theme(&theme);
+        let theme = Self::build_theme_impl(&theme);
 
         let highlights_cache = RefCell::new(HashMap::new());
         Self {
@@ -47,18 +44,9 @@ impl EditorWidget {
         }
     }
 
-    // convert hex strings into ratatui rgb colours
-    fn build_theme(theme: &[(&str, &str)]) -> Theme {
-        let mut result = HashMap::new();
-
-        // parse each name-hex pair
-        for (name, hex_color) in theme {
-            if let Ok(color) = hex_color.parse::<csscolorparser::Color>() {
-                let [r, g, b, _] = color.to_rgba8();
-                result.insert(name.to_string(), Style::default().fg(Color::Rgb(r, g, b)));
-            }
-        }
-        result
+    // setup theme wit ratatui styles
+    fn build_theme_impl(theme: &[(&str, &str)]) -> Theme {
+        build_theme(&theme)
     }
 
     // get syntax highlights for given byte range, using cache where possible

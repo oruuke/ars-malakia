@@ -8,7 +8,7 @@ use ratatui::{
 };
 
 // page for the reading!
-pub fn create_page(width: &u16, vertical_scroll: u16) -> Page<'static> {
+pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'static> {
     // introduce hai world
     let info1_str = "prelude here...";
     let info1_para = Paragraph::new(info1_str);

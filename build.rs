@@ -31,7 +31,7 @@ fn main() {
     modules.sort();
     writeln!(
         mod_file,
-        "\npub const ALL_PAGES: &[fn(&u16, u16) -> Page<'static>] = &["
+        "\npub const ALL_PAGES: &[fn(&u16, &u16, u16) -> Page<'static>] = &["
     )
     .unwrap();
 
