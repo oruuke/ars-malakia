@@ -1,3 +1,5 @@
+// heavily copied from le rat gods over at ratatui...
+
 use crate::theme::*;
 use itertools::Itertools;
 use ratatui::{buffer::Buffer, layout::Rect, style::Color, widgets::Widget};
