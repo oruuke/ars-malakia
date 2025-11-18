@@ -1,11 +1,10 @@
 use crate::model::Model;
 use crate::pages::ALL_PAGES;
 use ratatui::{
-    layout::Margin,
-    widgets::{
-        Block, Borders, Padding, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState,
-    },
     Frame,
+    layout::Margin,
+    symbols,
+    widgets::{Block, Padding, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState},
 };
 
 pub struct Page<'a> {
@@ -21,9 +20,12 @@ pub fn view(model: &mut Model, frame: &mut Frame) {
     let page_height = area.height.saturating_sub(4);
 
     // render current page directly to usable buffer with uniform block style
+    let thicc = symbols::border::DOUBLE;
+    let plain = symbols::border::PLAIN;
+    let border = if model.page == 0 { thicc } else { plain };
     let page = ALL_PAGES[model.page as usize](&page_width, &page_height, model.y_pos);
-    let block = Block::default()
-        .borders(Borders::ALL)
+    let block = Block::bordered()
+        .border_set(border)
         .padding(Padding::new(2, 2, 1, 1));
     frame.render_widget(page.content.block(block), area);
 
