@@ -12,7 +12,7 @@ use ratatui::{
 // page for the reading!
 pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'static> {
     // introduce hai world
-    let info1_str = "dis is another hai world program";
+    let info1_str = "dis is a shrimple hai world program";
     let info1_para = Paragraph::new(info1_str);
     let info1_height = info1_str.lines().count() as u16;
 
@@ -54,10 +54,10 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     let block = Block::default()
         .borders(Borders::ALL)
         .title(Line::from(" main.rs ").centered());
-    let padding = centered.inner(Margin::new(0, 1));
-    let inner = block.inner(padding);
+    let margin = centered.inner(Margin::new(0, 1));
+    let inner = block.inner(margin);
     // render code
-    block.render(padding, &mut buf);
+    block.render(margin, &mut buf);
     code1_editor.render(inner, &mut buf);
 
     // convert buffer to lines
