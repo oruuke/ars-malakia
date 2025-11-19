@@ -1,4 +1,5 @@
-use crate::ascii::{AsciiArt, TITLE};
+use crate::ascii::TITLE;
+use crate::ascii_art::AsciiArt;
 use crate::theme::center;
 use crate::view::Page;
 use ratatui::{
@@ -11,12 +12,12 @@ use ratatui::{
 
 // page for the reading!
 pub fn create_page(width: &u16, height: &u16, vertical_scroll: u16) -> Page<'static> {
-    // create ascii for cover art
-    let ascii_cover = AsciiArt::new();
     // get ascii dimensions
     let ascii_width_usize = TITLE.lines().map(|line| line.len()).max().unwrap_or(1);
     let ascii_width = ascii_width_usize.min(u16::MAX as usize) as u16;
     let ascii_height = TITLE.lines().count().max(1) as u16;
+    // create ascii for cover art
+    let ascii_cover = AsciiArt::new(TITLE.to_owned());
 
     // ensure usable space is enough to maintain rendering
     let available_width = (*width).max(1);

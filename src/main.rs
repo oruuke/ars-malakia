@@ -3,6 +3,7 @@ use better_panic;
 use color_eyre;
 // utils
 mod ascii;
+mod ascii_art;
 mod editor_wrapper;
 mod pages;
 mod theme;
