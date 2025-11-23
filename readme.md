@@ -17,6 +17,7 @@
 - [x] add cover and prelude and other stuffy book stuff
 - [x] add canvas big text wit ornate details
 - [x] add pretty garnish styling
+- [ ] fix wrapping for paragraphs rendered directly to buffer
 - [ ] add big letter openings wit text wrapping
 - [ ] add code sandbox option for code examples
 - [ ] add searching

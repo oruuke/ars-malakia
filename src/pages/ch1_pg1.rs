@@ -6,15 +6,15 @@ use ratatui::{
     layout::{Constraint, Flex, Layout, Margin, Rect},
     style::Style,
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Widget},
+    widgets::{Block, Borders, Paragraph, Widget, Wrap},
 };
 
 // page for the reading!
 pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'static> {
     // introduce hai world
-    let info1_str = "dis is a shrimple hai world program";
-    let info1_para = Paragraph::new(info1_str);
-    let info1_height = info1_str.lines().count() as u16;
+    const INFO1: &str = "a shrimple hai world program. file with any name (something.rs) exists in src/ folder at root of project and must have function called main.";
+    let info1_para = Paragraph::new(INFO1);
+    let info1_height = INFO1.lines().count() as u16;
 
     // setup hai world code
     let theme = tree_sitter();
@@ -34,30 +34,25 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     let mut current_y = 0;
 
     // render paragraph to virtual buffer
-    info1_para.render(
-        Rect {
-            x: 0,
-            y: current_y,
-            width: buf.area.width,
-            height: info1_height,
-        },
-        &mut buf,
-    );
+    let info1_rect = Rect::new(0, current_y, buf.area.width, info1_height);
+    let info1_block = Block::default();
+    let info1_inner = info1_block.inner(info1_rect);
+    info1_para.render(info1_inner, &mut buf);
 
     // center code
     current_y += info1_height;
-    let code_section = Rect::new(0, current_y, width.to_owned(), code1_height);
+    let code_rect = Rect::new(0, current_y, width.to_owned(), code1_height);
     let [centered] = Layout::horizontal([Constraint::Length(100)])
         .flex(Flex::Center)
-        .areas(code_section);
+        .areas(code_rect);
     // pad out code wit borders
-    let block = Block::default()
+    let code_block = Block::default()
         .borders(Borders::ALL)
         .title(Line::from(" main.rs ").centered());
     let margin = centered.inner(Margin::new(0, 1));
-    let inner = block.inner(margin);
+    let inner = code_block.inner(margin);
     // render code
-    block.render(margin, &mut buf);
+    code_block.render(margin, &mut buf);
     code1_editor.render(inner, &mut buf);
 
     // convert buffer to lines
