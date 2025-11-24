@@ -12,7 +12,7 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     // use usize for calculations wit other usize
     let width_usize = *width as usize;
     // setup into paragraph
-    const INFO1: &str = "first we talk basic shit like a hai world, types, and how to use em";
+    const INFO1: &str = "first we start wit de basics: abstraction. 'guh??', i hear you exclaim, 'b-but abstraction is wrapping complexity!' to which i remind you dat errything you write is an abstraction. it's not just how we're sitting atop binary, dis is also bout abstracting any value away from de value itself and into de variable name we give it.";
     let info1_para = Paragraph::new(INFO1).wrap(Wrap { trim: true });
     // get total characters divided by characters per line, rounded up
     let info1_height = ((INFO1.chars().count() + width_usize - 1) / width_usize).max(1) as u16;

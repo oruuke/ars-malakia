@@ -25,8 +25,12 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     let code1_editor = EditorWidget::new("rust", &code1_content, theme);
     let code1_height = code1_content.lines().count() as u16 + 5;
 
+    const INFO2: &str = "now to abstract dis string and many other values into some useful types before printing them.";
+    let info2_para = Paragraph::new(INFO2).wrap(Wrap { trim: true });
+    let info2_height = ((INFO2.chars().count() + width_usize - 1) / width_usize).max(1) as u16;
+
     // defining virtual buffer for scrolling
-    let buffer_height = info1_height + code1_height;
+    let buffer_height = info1_height + code1_height + info2_height;
     let mut buf = Buffer::empty(Rect {
         x: 0,
         y: 0,
@@ -57,6 +61,13 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     // render code
     code_block.render(margin, &mut buf);
     code1_editor.render(inner, &mut buf);
+
+    // render second paragraph
+    current_y += code1_height;
+    let info2_rect = Rect::new(0, current_y, buf.area.width, info2_height);
+    let info2_block = Block::default();
+    let info2_inner = info2_block.inner(info2_rect);
+    info2_para.render(info2_inner, &mut buf);
 
     // convert buffer to lines
     let lines: Vec<Line> = (0..buffer_height)
