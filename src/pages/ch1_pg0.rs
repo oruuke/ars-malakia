@@ -4,15 +4,18 @@ use ratatui::{
     layout::Rect,
     style::Style,
     text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Widget},
+    widgets::{Block, Borders, Paragraph, Widget, Wrap},
 };
 
 // page for the reading!
 pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'static> {
-    // introduce hai world
-    let info1_str = "first we talk basic shit like a hai world, types, and how to use em";
-    let info1_para = Paragraph::new(info1_str);
-    let info1_height = info1_str.lines().count() as u16;
+    // use usize for calculations wit other usize
+    let width_usize = *width as usize;
+    // setup into paragraph
+    const INFO1: &str = "first we talk basic shit like a hai world, types, and how to use em";
+    let info1_para = Paragraph::new(INFO1).wrap(Wrap { trim: true });
+    // get total characters divided by characters per line, rounded up
+    let info1_height = ((INFO1.chars().count() + width_usize - 1) / width_usize).max(1) as u16;
 
     // defining virtual buffer for scrolling
     let buffer_height = info1_height;
