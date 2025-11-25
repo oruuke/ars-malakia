@@ -20,54 +20,75 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     let info1_height = ((INFO1.chars().count() + width_usize - 1) / width_usize).max(1) as u16;
 
     // setup hai world code
-    let theme = tree_sitter();
     let code1_content = std::fs::read_to_string("./examples/hai_world.rs").unwrap();
-    let code1_editor = EditorWidget::new("rust", &code1_content, theme);
+    let code1_editor = EditorWidget::new("rust", &code1_content, tree_sitter());
     let code1_height = code1_content.lines().count() as u16 + 5;
 
-    const INFO2: &str = "now to abstract dis string and many other values into some useful types before printing them.";
+    // setup primitive types paragraph
+    const INFO2: &str = "now to abstract dis string and some other values into each primitive type before printing them.";
     let info2_para = Paragraph::new(INFO2).wrap(Wrap { trim: true });
     let info2_height = ((INFO2.chars().count() + width_usize - 1) / width_usize).max(1) as u16;
 
+    // setup primitive types code
+    let code2_content = std::fs::read_to_string("./examples/primitive_types_def.rs").unwrap();
+    let code2_editor = EditorWidget::new("rust", &code2_content, tree_sitter());
+    let code2_height = code2_content.lines().count() as u16 + 5;
+
     // defining virtual buffer for scrolling
-    let buffer_height = info1_height + code1_height + info2_height;
+    let buffer_height = info1_height + code1_height + info2_height + code2_height;
     let mut buf = Buffer::empty(Rect {
         x: 0,
         y: 0,
         width: width.to_owned(),
         height: buffer_height as u16,
     });
-    // track scroll position
+    // track widget positions within scroll area
     let mut current_y = 0;
 
-    // render paragraph to virtual buffer
+    // render hai world paragraph to virtual buffer
     let info1_rect = Rect::new(0, current_y, buf.area.width, info1_height);
     let info1_block = Block::default();
     let info1_inner = info1_block.inner(info1_rect);
     info1_para.render(info1_inner, &mut buf);
 
-    // center code
+    // center hai world code
     current_y += info1_height;
-    let code_rect = Rect::new(0, current_y, width.to_owned(), code1_height);
-    let [centered] = Layout::horizontal([Constraint::Length(100)])
+    let code1_rect = Rect::new(0, current_y, width.to_owned(), code1_height);
+    let [code1_layout] = Layout::horizontal([Constraint::Length(100)])
         .flex(Flex::Center)
-        .areas(code_rect);
-    // pad out code wit borders
-    let code_block = Block::default()
+        .areas(code1_rect);
+    // pad out hai world code wit borders
+    let code1_block = Block::default()
         .borders(Borders::ALL)
-        .title(Line::from(" main.rs ").centered());
-    let margin = centered.inner(Margin::new(0, 1));
-    let inner = code_block.inner(margin);
-    // render code
-    code_block.render(margin, &mut buf);
-    code1_editor.render(inner, &mut buf);
+        .title(Line::from(" hai_world/src/main.rs ").centered());
+    let code1_margin = code1_layout.inner(Margin::new(0, 1));
+    let code1_inner = code1_block.inner(code1_margin);
+    // render hai world code
+    code1_block.render(code1_margin, &mut buf);
+    code1_editor.render(code1_inner, &mut buf);
 
-    // render second paragraph
+    // render primitive types paragraph
     current_y += code1_height;
     let info2_rect = Rect::new(0, current_y, buf.area.width, info2_height);
     let info2_block = Block::default();
     let info2_inner = info2_block.inner(info2_rect);
     info2_para.render(info2_inner, &mut buf);
+
+    // center primitive types code
+    current_y += info2_height;
+    let code2_rect = Rect::new(0, current_y, width.to_owned(), code2_height);
+    let [code2_layout] = Layout::horizontal([Constraint::Length(100)])
+        .flex(Flex::Center)
+        .areas(code2_rect);
+    // pad out primitive types code
+    let code2_block = Block::default()
+        .borders(Borders::ALL)
+        .title(Line::from(" primitive_types/src/main.rs ").centered());
+    let code2_margin = code2_layout.inner(Margin::new(0, 1));
+    let code2_inner = code2_block.inner(code2_margin);
+    // render primitive types code
+    code2_block.render(code2_margin, &mut buf);
+    code2_editor.render(code2_inner, &mut buf);
 
     // convert buffer to lines
     let lines: Vec<Line> = (0..buffer_height)
