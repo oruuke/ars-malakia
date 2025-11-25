@@ -6,8 +6,6 @@ use crate::view::Page;
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
-    style::Style,
-    text::{Line, Span},
     widgets::{Block, Borders, Paragraph, Widget},
 };
 
