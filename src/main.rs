@@ -5,6 +5,7 @@ use color_eyre;
 mod ascii;
 mod ascii_art;
 mod editor_wrapper;
+mod page_builder;
 mod pages;
 mod theme;
 // elm structure

@@ -1,21 +1,16 @@
+use crate::page_builder::{buffer_to_lines, render_paragraph, setup_paragraph};
 use crate::view::Page;
 use ratatui::{
     buffer::Buffer,
     layout::Rect,
-    style::Style,
-    text::{Line, Span},
-    widgets::{Block, Borders, Paragraph, Widget, Wrap},
+    widgets::{Block, Borders, Paragraph},
 };
 
 // page for the reading!
 pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'static> {
-    // use usize for calculations wit other usize
-    let width_usize = *width as usize;
     // setup into paragraph
     const INFO1: &str = "first we start wit de basics: abstraction. 'guh??', i hear you exclaim, 'b-but abstraction is wrapping complexity!' to which i remind you dat errything you write is an abstraction. it's not just how we're sitting atop binary, dis is also bout abstracting any value away from de value itself and into de variable name we give it.";
-    let info1_para = Paragraph::new(INFO1).wrap(Wrap { trim: true });
-    // get total characters divided by characters per line, rounded up
-    let info1_height = ((INFO1.chars().count() + width_usize - 1) / width_usize).max(1) as u16;
+    let (info1_para, info1_height) = setup_paragraph(INFO1, *width);
 
     // defining virtual buffer for scrolling
     let buffer_height = info1_height;
@@ -27,43 +22,10 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     });
     // track scroll position
     let current_y = 0;
-
-    // render paragraph to virtual buffer
-    info1_para.render(
-        Rect {
-            x: 0,
-            y: current_y,
-            width: buf.area.width,
-            height: info1_height,
-        },
-        &mut buf,
-    );
+    render_paragraph(&mut buf, info1_para, current_y, *width, info1_height);
 
     // convert buffer to lines
-    let lines: Vec<Line> = (0..buffer_height)
-        .map(|y| {
-            // empty allocation
-            let mut spans = Vec::new();
-            let mut current_text = String::new();
-            let mut current_style = Style::new();
-            // iterate each character in line
-            for x in 0..buf.area.width {
-                let cell = &buf[(x, y)];
-                // add colours back in
-                if cell.style() != current_style && !current_text.is_empty() {
-                    spans.push(Span::styled(current_text.clone(), current_style));
-                    current_text.clear();
-                }
-                current_style = cell.style();
-                current_text.push_str(cell.symbol());
-            }
-            // add line if not already added
-            if !current_text.is_empty() {
-                spans.push(Span::styled(current_text, current_style));
-            }
-            Line::from(spans)
-        })
-        .collect();
+    let lines = buffer_to_lines(&buf, buffer_height);
 
     // create scrollable paragraph
     let content = Paragraph::new(lines)

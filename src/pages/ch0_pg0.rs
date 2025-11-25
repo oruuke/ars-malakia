@@ -1,5 +1,6 @@
 use crate::ascii::TITLE;
 use crate::ascii_art::AsciiArt;
+use crate::page_builder::buffer_to_lines;
 use crate::theme::center;
 use crate::view::Page;
 use ratatui::{
@@ -93,30 +94,7 @@ pub fn create_page(width: &u16, height: &u16, vertical_scroll: u16) -> Page<'sta
     }
 
     // convert buffer to lines
-    let lines: Vec<Line> = (0..available_height)
-        .map(|y| {
-            // empty allocation
-            let mut spans = Vec::new();
-            let mut current_text = String::new();
-            let mut current_style = Style::new();
-            // iterate each character in line
-            for x in 0..buf.area.width {
-                let cell = &buf[(x, y)];
-                // add colours back in
-                if cell.style() != current_style && !current_text.is_empty() {
-                    spans.push(Span::styled(current_text.clone(), current_style));
-                    current_text.clear();
-                }
-                current_style = cell.style();
-                current_text.push_str(cell.symbol());
-            }
-            // add line if not already added
-            if !current_text.is_empty() {
-                spans.push(Span::styled(current_text, current_style));
-            }
-            Line::from(spans)
-        })
-        .collect();
+    let lines = buffer_to_lines(&buf, available_height);
 
     // create scrollable paragraph
     let content = Paragraph::new(lines)
