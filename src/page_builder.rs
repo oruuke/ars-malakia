@@ -1,5 +1,5 @@
 use crate::editor_wrapper::EditorWidget;
-use crate::theme::tree_sitter;
+use crate::theme::{PINK3, build_style, tree_sitter};
 use ratatui::{
     buffer::Buffer,
     layout::{Constraint, Flex, Layout, Margin, Rect},
@@ -46,6 +46,7 @@ pub fn render_code(
         .areas(rect);
     let block = Block::default()
         .borders(Borders::ALL)
+        .border_style(build_style(PINK3))
         .title(Line::from(format!(" {} ", title)).centered());
     let margin = layout.inner(Margin::new(0, 1));
     let inner = block.inner(margin);

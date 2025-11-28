@@ -1,11 +1,12 @@
 fn main() {
-    let str: &str = "hai world!";
-    println!("ferris exclaims wit excitement, \"{}\"", str);
-    let string: String = String::from("hai wor-- hai w-- ha--");
-    println!("ferris' voice echoes, \"{}\"", string);
+    let confusion: char = '?';
+    println!("guh{}", confusion);
+    let greeting: &str = "hai world!";
+    println!("ferris exclaims wit excitement, \"{}\"", greeting);
+    let count: u8 = 69;
+    println!("woah, {} blahaj!!", count);
+    let measurement: f32 = 1.25;
+    println!("awwww only {}L left of milk...", measurement);
     let boolean: bool = true;
-    println!(
-        "do programming socks actually boost code quality? {}",
-        boolean
-    );
+    println!("programming socks boost code quality: {}", boolean);
 }

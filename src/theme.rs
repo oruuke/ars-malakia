@@ -11,7 +11,7 @@ pub const PINK1: &str = "#FFAFFF";
 pub const PINK2: &str = "#DC8BB2";
 pub const PINK3: &str = "#B55088";
 // cyans
-//pub const CYAN1: &str = "#99CCCC";
+pub const CYAN1: &str = "#99CCCC";
 pub const CYAN2: &str = "#007F7F";
 //pub const CYAN3: &str = "#004C4C";
 // other

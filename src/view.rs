@@ -1,5 +1,6 @@
 use crate::model::Model;
 use crate::pages::ALL_PAGES;
+use crate::theme::{WHITE, build_style};
 use ratatui::{
     Frame,
     layout::Margin,
@@ -26,6 +27,7 @@ pub fn view(model: &mut Model, frame: &mut Frame) {
     let page = ALL_PAGES[model.page as usize](&page_width, &page_height, model.y_pos);
     let block = Block::bordered()
         .border_set(border)
+        .border_style(build_style(WHITE))
         .padding(Padding::new(2, 2, 1, 1));
     frame.render_widget(page.content.block(block), area);
 
