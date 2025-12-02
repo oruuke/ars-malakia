@@ -3,7 +3,7 @@ use crate::pages::ALL_PAGES;
 use crate::theme::{WHITE, build_style};
 use ratatui::{
     Frame,
-    layout::Margin,
+    layout::{Constraint, Flex, Layout, Margin},
     symbols,
     widgets::{Block, Padding, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState},
 };
@@ -15,12 +15,18 @@ pub struct Page<'a> {
 
 // rendering view to always produce same ui representation for given model
 pub fn view(model: &mut Model, frame: &mut Frame) {
-    // area for pages, minus borders (2), padding (4), scrollbar (1)
+    // centered and margined layout wit max width to read like book!
     let area = frame.area();
-    let page_width = area.width.saturating_sub(7);
-    let page_height = area.height.saturating_sub(4);
+    let margin = area.inner(Margin::new(4, 1));
+    let [layout] = Layout::horizontal([Constraint::Length(110)])
+        .flex(Flex::Center)
+        .areas(margin);
 
-    // render current page directly to usable buffer with uniform block style
+    // dimensions for pages, minus borders (2), padding (4), scrollbar (1)
+    let page_width = layout.width.saturating_sub(7);
+    let page_height = layout.height.saturating_sub(4);
+
+    // render current page directly to usable buffer wit uniform block style
     let thicc = symbols::border::DOUBLE;
     let plain = symbols::border::PLAIN;
     let border = if model.page == 0 { thicc } else { plain };
@@ -29,15 +35,15 @@ pub fn view(model: &mut Model, frame: &mut Frame) {
         .border_set(border)
         .border_style(build_style(WHITE))
         .padding(Padding::new(2, 2, 1, 1));
-    frame.render_widget(page.content.block(block), area);
+    frame.render_widget(page.content.block(block), layout);
 
-    // configure scroll with custom symbols
+    // configure scroll wit custom symbols
     let scrollbar = Scrollbar::new(ScrollbarOrientation::VerticalRight)
         .begin_symbol(Some("↑"))
         .end_symbol(Some("↓"));
 
     // calculate max scroll offset based on how it fits viewport
-    let visible_height = area.height.saturating_sub(3);
+    let visible_height = layout.height.saturating_sub(3);
     model.max_scroll = page.height.saturating_sub(visible_height);
     if model.max_scroll > 0 {
         let mut scrollbar_state =
@@ -45,7 +51,7 @@ pub fn view(model: &mut Model, frame: &mut Frame) {
         frame.render_stateful_widget(
             scrollbar,
             // add margin to distance page content away from border
-            area.inner(Margin {
+            layout.inner(Margin {
                 vertical: 1,
                 horizontal: 0,
             }),

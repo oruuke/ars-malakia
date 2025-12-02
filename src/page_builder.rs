@@ -40,17 +40,20 @@ pub fn render_code(
     height: u16,
     title: &str,
 ) {
+    // centered and margined layout wit max width to help break up page
     let rect = Rect::new(0, y_pos, width, height);
-    let [layout] = Layout::horizontal([Constraint::Length(100)])
+    let margin = rect.inner(Margin::new(0, 1));
+    let [layout] = Layout::horizontal([Constraint::Length(90)])
         .flex(Flex::Center)
-        .areas(rect);
+        .areas(margin);
+    // in basic titled border
     let block = Block::default()
         .borders(Borders::ALL)
         .border_style(build_style(PINK3))
         .title(Line::from(format!(" {} ", title)).centered());
-    let margin = layout.inner(Margin::new(0, 1));
-    let inner = block.inner(margin);
-    block.render(margin, buf);
+    let inner = block.inner(layout);
+    // rendered to buffer
+    block.render(layout, buf);
     editor.render(inner, buf);
 }
 

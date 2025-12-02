@@ -30,9 +30,9 @@ impl Default for AsciiArt {
             should_squash: false,
             full_colour: build_style(WHITE),
             most_colour: build_style(PINK3),
-            half_colour: Color::Indexed(237),
+            half_colour: build_style(PINK2),
             quarter_colour: build_style(CYAN2),
-            alt_colour: Color::Indexed(196),
+            alt_colour: build_style(GOLD1),
         }
     }
 }
@@ -53,7 +53,8 @@ impl AsciiArt {
             HALF => Some(self.half_colour),
             QUARTER => Some(self.quarter_colour),
             ALT => Some(self.alt_colour),
-            _ => None,
+            EMPTY => None,
+            _ => Some(self.alt_colour),
         }
     }
 }
@@ -81,7 +82,8 @@ impl Widget for AsciiArt {
                     };
                     let symbol = match ch {
                         EMPTY => None,
-                        _ => Some('█'),
+                        FULL | MOST | HALF | QUARTER => Some('█'),
+                        _ => Some(ch),
                     };
                     if let Some(colour) = colour {
                         cell.fg = colour;

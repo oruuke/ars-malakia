@@ -49,7 +49,7 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
         current_y,
         *width,
         code1_height,
-        "hai world",
+        "\"hai world!\" program",
     );
     current_y += code1_height;
     // render primitive types paragraph
