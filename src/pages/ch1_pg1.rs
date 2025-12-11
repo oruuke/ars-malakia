@@ -28,9 +28,21 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     // setup sequence types code
     let (_, code3_editor, code3_height) = setup_code("./examples/sequence_types_def.rs");
 
+    // setup user types paragraph
+    const INFO4: &str = "...and put dose into our own user defined types";
+    let (info4_para, info4_height) = setup_paragraph(INFO4, *width);
+    // setup user types code
+    let (_, code4_editor, code4_height) = setup_code("./examples/user_types_def.rs");
+
     // defining virtual buffer for scrolling
-    let buffer_height =
-        info1_height + code1_height + info2_height + code2_height + info3_height + code3_height;
+    let buffer_height = info1_height
+        + code1_height
+        + info2_height
+        + code2_height
+        + info3_height
+        + code3_height
+        + info4_height
+        + code4_height;
     let mut buf = Buffer::empty(Rect {
         x: 0,
         y: 0,
@@ -76,6 +88,19 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
         *width,
         code3_height,
         "sequence types",
+    );
+    current_y += code3_height;
+    // render user types paragraph
+    render_paragraph(&mut buf, info4_para, current_y, *width, info4_height);
+    current_y += info4_height;
+    // center user types code
+    render_code(
+        &mut buf,
+        code4_editor,
+        current_y,
+        *width,
+        code4_height,
+        "user types",
     );
 
     // convert buffer to lines
