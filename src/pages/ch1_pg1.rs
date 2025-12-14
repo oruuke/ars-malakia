@@ -29,7 +29,7 @@ pub fn create_page(width: &u16, _height: &u16, vertical_scroll: u16) -> Page<'st
     let (_, code3_editor, code3_height) = setup_code("./examples/sequence_types_def.rs");
 
     // setup user types paragraph
-    const INFO4: &str = "...and put dose into our own user defined types";
+    const INFO4: &str = "...or put em into our own user defined types";
     let (info4_para, info4_height) = setup_paragraph(INFO4, *width);
     // setup user types code
     let (_, code4_editor, code4_height) = setup_code("./examples/user_types_def.rs");
